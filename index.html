@@ -27,6 +27,10 @@
             <span class="icon">🐝</span>
             <span class="label">Jogo</span>
         </button>
+        <button id="btn-open-carta" class="nav-item" title="Carta do Tempo">
+            <span class="icon">💌</span>
+            <span class="label">Carta</span>
+        </button>
         <button id="btn-open-time" class="nav-item" title="Nossa História">
             <span class="icon">⏳</span>
             <span class="label">Tempo</span>
@@ -84,6 +88,38 @@
                 <h2>Museu de Poemas</h2>
                 <p style="text-align: center; margin-bottom: 30px; font-style: italic; opacity: 0.8;">Uma galeria com todos os versos já escritos para você.</p>
                 <div class="poem-gallery" id="poem-gallery"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="carta-modal" class="modal">
+        <div class="modal-glass-content" style="max-width: 500px; text-align: center;">
+            <button class="close-modal" id="close-carta-btn">&times;</button>
+            <div class="poem-wrapper">
+                <span class="bee-divider">🌻</span>
+                <h2>Carta do Tempo</h2>
+                
+                <div id="carta-locked">
+                    <div class="lock-icon">🔒</div>
+                    <p class="carta-msg">Esta semente ainda está germinando...</p>
+                    <p style="opacity: 0.8; font-size: 0.95rem; margin-top: 10px;">
+                        Volte aqui no <strong>dia 7</strong> para abrir a surpresa deste mês! 🐝
+                    </p>
+                </div>
+
+                <div id="carta-unlocked" class="hidden">
+                    <div class="unlock-icon pulse">💌</div>
+                    <p class="carta-msg" style="color: var(--accent-gold); font-weight: bold;">Carta Aberta!</p>
+                    
+                    <div class="carta-text-box">
+                        <p id="carta-secret-text">
+                            "Feliz dia 7, minha pipoca! 🍿<br><br>
+                            Este é o nosso espaço especial. Aqui fica o texto de exemplo para você, Madurinho, editar depois.<br><br>
+                            Você pode escrever sobre como foi incrível o mês de vocês, deixar uma nova declaração ou relembrar um momento engraçado que passaram recentemente. Todo mês você pode vir no código e trocar essa mensagem!"
+                        </p>
+                    </div>
+                </div>
+                
             </div>
         </div>
     </div>

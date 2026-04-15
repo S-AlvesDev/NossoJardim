@@ -478,3 +478,34 @@ canvas { width: 100%; height: 100%; display: block; cursor: crosshair; }
     50% { transform: scale(1.2) translateY(-5px); }
     100% { transform: scale(1); }
 }
+
+/* --- CÁPSULA DO TEMPO --- */
+.lock-icon, .unlock-icon {
+    font-size: 4.5rem;
+    margin: 20px 0;
+    text-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.capsule-msg {
+    font-family: var(--font-heading);
+    font-size: 1.6rem;
+    color: var(--text-main);
+}
+
+.capsule-text-box {
+    background: rgba(255, 255, 255, 0.4);
+    border: 1px dashed var(--accent-gold);
+    padding: 25px 20px;
+    border-radius: 15px;
+    margin-top: 20px;
+    font-style: italic;
+    line-height: 1.7;
+    font-size: 1rem;
+    color: var(--text-main);
+    box-shadow: inset 0 0 10px rgba(212, 175, 55, 0.1);
+}
+
+/* Classe auxiliar que esconde os elementos */
+.hidden {
+    display: none !important;
+}

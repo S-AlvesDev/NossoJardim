@@ -1,25 +1,27 @@
 document.addEventListener("DOMContentLoaded", () => {
+    
     // --- 1. Controle de Música ---
     const bgMusic = document.getElementById("bg-music");
     const musicBtn = document.getElementById("music-btn");
     let isPlaying = false;
     
-    bgMusic.volume = 0.4;
+    if (bgMusic) bgMusic.volume = 0.4;
 
-    musicBtn.addEventListener("click", () => {
-        if (isPlaying) {
-            bgMusic.pause();
-        } else {
-            bgMusic.play().catch(e => console.log("Interação necessária para autoplay"));
-        }
-        isPlaying = !isPlaying;
-    });
+    if (musicBtn) {
+        musicBtn.addEventListener("click", () => {
+            if (isPlaying) {
+                bgMusic.pause();
+            } else {
+                bgMusic.play().catch(e => console.log("Interação necessária para autoplay"));
+            }
+            isPlaying = !isPlaying;
+        });
+    }
 
     // --- 2. Gerador Automático da Galeria (20 Fotos) ---
     const galleryContainer = document.getElementById("gallery-container");
     const totalFotos = 21;
     
-    // Lista de frases para intercalar nas fotos
     const frasesRomanticas = [
         "Você é o mel da minha vida.",
         "Tão doce quanto o néctar das flores.",
@@ -38,26 +40,24 @@ document.addEventListener("DOMContentLoaded", () => {
         "Te devoro com os olhos e com a alma."
     ];
 
-    // Cria os 20 cards automaticamente
-    for (let i = 1; i <= totalFotos; i++) {
-        // Pega uma frase da lista (se passar da quantidade, ele recomeça a lista)
-        let frase = frasesRomanticas[(i - 1) % frasesRomanticas.length];
-        
-        let card = document.createElement("div");
-        card.className = "premium-card fade-in";
-        card.innerHTML = `
-            <div class="image-container">
-                <img src="Amor${i}.webp" alt="Nosso Momento ${i}" loading="lazy">
-            </div>
-            <div class="card-info">
-                <p>“${frase}”</p>
-            </div>
-        `;
-        galleryContainer.appendChild(card);
+    if (galleryContainer) {
+        for (let i = 1; i <= totalFotos; i++) {
+            let frase = frasesRomanticas[(i - 1) % frasesRomanticas.length];
+            let card = document.createElement("div");
+            card.className = "premium-card fade-in";
+            card.innerHTML = `
+                <div class="image-container">
+                    <img src="Amor${i}.webp" alt="Nosso Momento ${i}" loading="lazy">
+                </div>
+                <div class="card-info">
+                    <p>“${frase}”</p>
+                </div>
+            `;
+            galleryContainer.appendChild(card);
+        }
     }
 
     // --- 3. Animação de Scroll (Fade-In) ---
-    // A observação começa DEPOIS que as 20 fotos foram criadas
     const fadeElements = document.querySelectorAll(".fade-in");
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
@@ -70,24 +70,28 @@ document.addEventListener("DOMContentLoaded", () => {
 
     fadeElements.forEach(el => observer.observe(el));
 
-    // --- 4. Controle dos Modais ---
+    // --- 4. Controle dos Modais Simples ---
     const poemModal = document.getElementById("poem-modal");
     const gameModal = document.getElementById("game-modal");
 
-    document.getElementById("btn-read-poem").onclick = () => poemModal.classList.add("active");
-    document.getElementById("btn-play-game").onclick = () => gameModal.classList.add("active");
+    const btnReadPoem = document.getElementById("btn-read-poem");
+    const btnPlayGame = document.getElementById("btn-play-game");
+
+    if (btnReadPoem && poemModal) btnReadPoem.onclick = () => poemModal.classList.add("active");
+    if (btnPlayGame && gameModal) btnPlayGame.onclick = () => gameModal.classList.add("active");
 
     document.querySelectorAll(".close-modal").forEach(btn => {
         btn.onclick = () => {
-            poemModal.classList.remove("active");
-            gameModal.classList.remove("active");
-            stopGame();
+            if (poemModal) poemModal.classList.remove("active");
+            if (gameModal) gameModal.classList.remove("active");
+            if (typeof stopGame === "function") stopGame();
         };
     });
 
     // --- 5. Partículas Decorativas de Fundo ---
     function spawnBackgroundParticles() {
         const garden = document.getElementById("garden-background");
+        if (!garden) return;
         const items = ['🌻', '✨', '💛'];
         
         for(let i = 0; i < 20; i++){
@@ -104,129 +108,157 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     spawnBackgroundParticles();
 
-    // --- 6. Motor do Jogo de Abelha ---
-    const canvas = document.getElementById("beeGame");
-    const ctx = canvas.getContext("2d");
-    const startScreen = document.getElementById("start-screen");
-    const gameOverScreen = document.getElementById("game-over-screen");
-    const scoreDisplay = document.getElementById("score-display");
-    const finalScore = document.getElementById("final-score");
+    // --- 6. CÁPSULA DO TEMPO ---
+    const btnOpenCapsule = document.getElementById('btn-open-capsule');
+    const capsuleModal = document.getElementById('capsule-modal');
+    const closeCapsuleBtn = document.getElementById('close-capsule-btn');
+    const lockedView = document.getElementById('capsule-locked');
+    const unlockedView = document.getElementById('capsule-unlocked');
 
-    let score = 0;
-    let gameActive = false;
-    let animationId;
-    let potes = [];
-    let bee = { x: 0, y: 0, w: 40, h: 40 };
-
-    function initCanvas() {
-        canvas.width = canvas.offsetWidth;
-        canvas.height = canvas.offsetHeight;
-        bee.y = canvas.height - 60; 
-        bee.x = canvas.width / 2;   
-    }
-
-    function createPote() {
-        if (!gameActive) return;
-        
-        potes.push({
-            x: Math.random() * (canvas.width - 40) + 20,
-            y: -30,
-            speed: 2 + (score * 0.3) 
+    if (btnOpenCapsule && capsuleModal) {
+        btnOpenCapsule.addEventListener('click', () => {
+            capsuleModal.classList.add('active');
+            checkCapsuleDate();
         });
-        
-        let spawnRate = Math.max(500, 1500 - (score * 50));
-        setTimeout(createPote, spawnRate);
     }
 
-    function updateGame() {
-        if (!gameActive) return;
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    if (closeCapsuleBtn) {
+        closeCapsuleBtn.addEventListener('click', () => {
+            capsuleModal.classList.remove('active');
+        });
+    }
 
-        ctx.font = "40px Arial";
-        ctx.textAlign = "center";
-        ctx.textBaseline = "middle";
-        ctx.fillText("🐝", bee.x, bee.y);
+    function checkCapsuleDate() {
+        const today = new Date();
+        const currentDay = today.getDate();
 
-        for (let i = potes.length - 1; i >= 0; i--) {
-            let p = potes[i];
-            p.y += p.speed;
+        // ATENÇÃO: Aqui está o 15 para você testar hoje. 
+        // Lembre-se de mudar para 7 quando quiser que funcione só no dia 7!
+        if (currentDay === 15) {
+            if (lockedView) lockedView.classList.add('hidden');
+            if (unlockedView) unlockedView.classList.remove('hidden');
+        } else {
+            if (unlockedView) unlockedView.classList.add('hidden');
+            if (lockedView) lockedView.classList.remove('hidden');
+        }
+    }
 
-            ctx.font = "35px Arial";
-            ctx.fillText("🍯", p.x, p.y);
+    // --- 7. Motor do Jogo de Abelha ---
+    const canvas = document.getElementById("beeGame");
+    if (canvas) {
+        const ctx = canvas.getContext("2d");
+        const startScreen = document.getElementById("start-screen");
+        const gameOverScreen = document.getElementById("game-over-screen");
+        const scoreDisplay = document.getElementById("score-display");
+        const finalScore = document.getElementById("final-score");
 
-            let distX = Math.abs(bee.x - p.x);
-            let distY = Math.abs(bee.y - p.y);
+        let score = 0;
+        let gameActive = false;
+        let animationId;
+        let potes = [];
+        let bee = { x: 0, y: 0, w: 40, h: 40 };
 
-            if (distX < 35 && distY < 35) {
-                potes.splice(i, 1); 
-                score++;
-                scoreDisplay.innerText = `Potes: ${score}`;
-            } 
-            else if (p.y > canvas.height + 20) {
-                endGame();
-            }
+        function initCanvas() {
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+            bee.y = canvas.height - 60; 
+            bee.x = canvas.width / 2;   
         }
 
-        animationId = requestAnimationFrame(updateGame);
-    }
+        function createPote() {
+            if (!gameActive) return;
+            potes.push({
+                x: Math.random() * (canvas.width - 40) + 20,
+                y: -30,
+                speed: 2 + (score * 0.3) 
+            });
+            let spawnRate = Math.max(500, 1500 - (score * 50));
+            setTimeout(createPote, spawnRate);
+        }
 
-    function startGame() {
-        initCanvas();
-        score = 0;
-        potes = [];
-        gameActive = true;
-        scoreDisplay.innerText = "Potes: 0";
-        startScreen.classList.add("hidden");
-        gameOverScreen.classList.add("hidden");
+        function updateGame() {
+            if (!gameActive) return;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            ctx.font = "40px Arial";
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            ctx.fillText("🐝", bee.x, bee.y);
+
+            for (let i = potes.length - 1; i >= 0; i--) {
+                let p = potes[i];
+                p.y += p.speed;
+
+                ctx.font = "35px Arial";
+                ctx.fillText("🍯", p.x, p.y);
+
+                let distX = Math.abs(bee.x - p.x);
+                let distY = Math.abs(bee.y - p.y);
+
+                if (distX < 35 && distY < 35) {
+                    potes.splice(i, 1); 
+                    score++;
+                    scoreDisplay.innerText = `Potes: ${score}`;
+                } 
+                else if (p.y > canvas.height + 20) {
+                    endGame();
+                }
+            }
+            animationId = requestAnimationFrame(updateGame);
+        }
+
+        function startGame() {
+            initCanvas();
+            score = 0;
+            potes = [];
+            gameActive = true;
+            scoreDisplay.innerText = "Potes: 0";
+            startScreen.classList.add("hidden");
+            gameOverScreen.classList.add("hidden");
+            createPote();
+            updateGame();
+        }
+
+        function endGame() {
+            gameActive = false;
+            cancelAnimationFrame(animationId);
+            finalScore.innerText = score;
+            gameOverScreen.classList.remove("hidden");
+        }
+
+        window.stopGame = function() {
+            gameActive = false;
+            cancelAnimationFrame(animationId);
+            if (startScreen) startScreen.classList.remove("hidden");
+            if (gameOverScreen) gameOverScreen.classList.add("hidden");
+        }
+
+        const handleMove = (e) => {
+            if(!gameActive) return;
+            const rect = canvas.getBoundingClientRect();
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX; 
+            bee.x = clientX - rect.left;
+            if (bee.x < 20) bee.x = 20;
+            if (bee.x > canvas.width - 20) bee.x = canvas.width - 20;
+        };
+
+        canvas.addEventListener("mousemove", handleMove);
+        canvas.addEventListener("touchmove", (e) => {
+            e.preventDefault(); 
+            handleMove(e);
+        }, { passive: false });
+
+        const btnStart = document.getElementById("start-game-btn");
+        const btnRestart = document.getElementById("restart-btn");
+        if (btnStart) btnStart.onclick = startGame;
+        if (btnRestart) btnRestart.onclick = startGame;
         
-        createPote();
-        updateGame();
+        window.addEventListener("resize", () => {
+            if(gameActive) initCanvas();
+        });
     }
 
-    function endGame() {
-        gameActive = false;
-        cancelAnimationFrame(animationId);
-        finalScore.innerText = score;
-        gameOverScreen.classList.remove("hidden");
-    }
-
-    function stopGame() {
-        gameActive = false;
-        cancelAnimationFrame(animationId);
-        startScreen.classList.remove("hidden");
-        gameOverScreen.classList.add("hidden");
-    }
-
-    const handleMove = (e) => {
-        if(!gameActive) return;
-        const rect = canvas.getBoundingClientRect();
-        const clientX = e.touches ? e.touches[0].clientX : e.clientX; 
-        
-        bee.x = clientX - rect.left;
-        
-        if (bee.x < 20) bee.x = 20;
-        if (bee.x > canvas.width - 20) bee.x = canvas.width - 20;
-    };
-
-    canvas.addEventListener("mousemove", handleMove);
-    canvas.addEventListener("touchmove", (e) => {
-        e.preventDefault(); 
-        handleMove(e);
-    }, { passive: false });
-
-    document.getElementById("start-game-btn").onclick = startGame;
-    document.getElementById("restart-btn").onclick = startGame;
-    
-    window.addEventListener("resize", () => {
-        if(gameActive) initCanvas();
-    });
-});
-
-// --- 4. Banco de Dados do Museu de Poemas ---
-    // PARA ADICIONAR UM NOVO POEMA NO FUTURO:
-    // Basta copiar um bloco { titulo: "...", texto: `...` } e colar no topo da lista.
-    // Use a crase (`) para envolver o texto, assim o JavaScript respeita os parágrafos.
-    
+    // --- 8. Banco de Dados e Lógica do Museu de Poemas ---
     const poemasAntigos = [
         {
             titulo: "Tempestade Boa",
@@ -444,151 +476,125 @@ mesmo quando tudo tenta passar.`
         }
     ];
 
-    // --- 5. Lógica para carregar e abrir o Museu ---
     const museumModal = document.getElementById("museum-modal");
     const openMuseumBtn = document.getElementById("open-museum-btn");
     const closeMuseumBtn = document.getElementById("close-museum-btn");
     const poemGallery = document.getElementById("poem-gallery");
 
-    // Função para renderizar os poemas na tela
-    function carregarPoemas() {
-        poemGallery.innerHTML = ""; // Limpa antes de carregar
-        
+    if (poemGallery) {
+        poemGallery.innerHTML = ""; 
         poemasAntigos.forEach(poema => {
             const card = document.createElement("div");
             card.classList.add("museum-card");
-            
-            card.innerHTML = `
-                <h3>${poema.titulo}</h3>
-                <p>${poema.texto}</p>
-            `;
-            
+            card.innerHTML = `<h3>${poema.titulo}</h3><p>${poema.texto}</p>`;
             poemGallery.appendChild(card);
         });
     }
 
-    // Carrega os poemas assim que o site abre
-    carregarPoemas();
+    if (openMuseumBtn && museumModal) {
+        openMuseumBtn.addEventListener("click", () => museumModal.classList.add("active"));
+    }
+    if (closeMuseumBtn && museumModal) {
+        closeMuseumBtn.addEventListener("click", () => museumModal.classList.remove("active"));
+    }
 
-    // Abrir o museu
-    openMuseumBtn.addEventListener("click", () => {
-        museumModal.classList.add("active");
-    });
+    // --- 9. MÓDULO DA NOSSA HISTÓRIA (TEMPO / SENHA) ---
+    const btnOpenTime = document.getElementById('btn-open-time');
+    const passwordModal = document.getElementById('password-modal');
+    const closePasswordBtn = document.getElementById('close-password-btn');
+    const passwordInput = document.getElementById('password-input');
+    const submitPasswordBtn = document.getElementById('submit-password');
+    const passwordError = document.getElementById('password-error');
+    const timePage = document.getElementById('time-page');
+    const closeTimePageBtn = document.getElementById('close-time-page');
 
-    // Fechar o museu pelo botão X
-    closeMuseumBtn.addEventListener("click", () => {
-        museumModal.classList.remove("active");
-    });
+    if (btnOpenTime && passwordModal) {
+        btnOpenTime.addEventListener('click', () => {
+            passwordModal.classList.add('active');
+            if (passwordInput) {
+                passwordInput.value = ''; 
+                passwordInput.focus();
+            }
+            if (passwordError) passwordError.style.display = 'none'; 
+        });
+    }
 
-    // Fechar o museu clicando fora da caixa
-    window.addEventListener("click", (event) => {
-        if (event.target === museumModal) {
-            museumModal.classList.remove("active");
-        }
-    });
+    if (closePasswordBtn && passwordModal) {
+        closePasswordBtn.addEventListener('click', () => passwordModal.classList.remove('active'));
+    }
 
-    // ==========================================
-// MÓDULO DA NOSSA HISTÓRIA (TEMPO / SENHA)
-// ==========================================
-
-const btnOpenTime = document.getElementById('btn-open-time');
-const passwordModal = document.getElementById('password-modal');
-const closePasswordBtn = document.getElementById('close-password-btn');
-const passwordInput = document.getElementById('password-input');
-const submitPasswordBtn = document.getElementById('submit-password');
-const passwordError = document.getElementById('password-error');
-const timePage = document.getElementById('time-page');
-const closeTimePageBtn = document.getElementById('close-time-page');
-
-// 1. Controle do Modal de Senha
-btnOpenTime.addEventListener('click', () => {
-    passwordModal.classList.add('active');
-    passwordInput.value = ''; // Limpa o campo
-    passwordError.style.display = 'none'; // Esconde o erro
-    passwordInput.focus();
-});
-
-closePasswordBtn.addEventListener('click', () => {
-    passwordModal.classList.remove('active');
-});
-
-// 2. Validação da Senha
-function validatePassword() {
-    const password = passwordInput.value;
-    
-    if (password === '071225') {
-        // Senha Correta!
-        passwordModal.classList.remove('active');
-        timePage.classList.remove('hidden');
-        startTimeCounter(); // Inicia o relógio
-    } else {
-        // Senha Incorreta!
-        passwordError.style.display = 'block';
-        passwordInput.value = '';
+    function validatePassword() {
+        if (!passwordInput) return;
+        const password = passwordInput.value;
         
-        // Efeito de tremer (shake)
-        passwordModal.querySelector('.modal-glass-content').classList.add('shake');
-        setTimeout(() => {
-            passwordModal.querySelector('.modal-glass-content').classList.remove('shake');
-        }, 400);
-    }
-}
-
-submitPasswordBtn.addEventListener('click', validatePassword);
-
-// Permite apertar a tecla "Enter" para confirmar a senha
-passwordInput.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') {
-        validatePassword();
-    }
-});
-
-// Fechar a página de Tempo
-closeTimePageBtn.addEventListener('click', () => {
-    timePage.classList.add('hidden');
-    clearInterval(timeInterval); // Para o relógio para economizar bateria
-});
-
-// 3. Lógica do Relógio (Contador)
-let timeInterval;
-
-function startTimeCounter() {
-    // Data inicial: 07 de Dezembro de 2025, às 00:00:00
-    // Em JavaScript, os meses vão de 0 (Janeiro) a 11 (Dezembro).
-    // Então Dezembro é o mês 11.
-    const startDate = new Date(2025, 11, 7, 0, 0, 0).getTime();
-
-    const daysEl = document.getElementById('days');
-    const hoursEl = document.getElementById('hours');
-    const minutesEl = document.getElementById('minutes');
-    const secondsEl = document.getElementById('seconds');
-
-    // Limpa qualquer relógio anterior
-    clearInterval(timeInterval);
-
-    timeInterval = setInterval(() => {
-        const now = new Date().getTime();
-        const distance = now - startDate;
-
-        // Se a data ainda não chegou (caso a gente teste antes da data)
-        if (distance < 0) {
-            daysEl.innerText = "00";
-            hoursEl.innerText = "00";
-            minutesEl.innerText = "00";
-            secondsEl.innerText = "00";
-            return;
+        if (password === '071225') {
+            passwordModal.classList.remove('active');
+            if (timePage) timePage.classList.remove('hidden');
+            startTimeCounter(); 
+        } else {
+            if (passwordError) passwordError.style.display = 'block';
+            passwordInput.value = '';
+            const glassContent = passwordModal.querySelector('.modal-glass-content');
+            if (glassContent) {
+                glassContent.classList.add('shake');
+                setTimeout(() => glassContent.classList.remove('shake'), 400);
+            }
         }
+    }
 
-        // Cálculos matemáticos de tempo
-        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+    if (submitPasswordBtn) submitPasswordBtn.addEventListener('click', validatePassword);
 
-        // padStart garante que sempre tenha 2 dígitos (ex: 05 em vez de 5)
-        daysEl.innerText = days.toString().padStart(2, '0');
-        hoursEl.innerText = hours.toString().padStart(2, '0');
-        minutesEl.innerText = minutes.toString().padStart(2, '0');
-        secondsEl.innerText = seconds.toString().padStart(2, '0');
-    }, 1000);
-}
+    if (passwordInput) {
+        passwordInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') validatePassword();
+        });
+    }
+
+    if (closeTimePageBtn && timePage) {
+        closeTimePageBtn.addEventListener('click', () => {
+            timePage.classList.add('hidden');
+            clearInterval(timeInterval); 
+        });
+    }
+
+    let timeInterval;
+    function startTimeCounter() {
+        const startDate = new Date(2025, 11, 7, 0, 0, 0).getTime();
+        const daysEl = document.getElementById('days');
+        const hoursEl = document.getElementById('hours');
+        const minutesEl = document.getElementById('minutes');
+        const secondsEl = document.getElementById('seconds');
+
+        clearInterval(timeInterval);
+
+        timeInterval = setInterval(() => {
+            const now = new Date().getTime();
+            const distance = now - startDate;
+
+            if (distance < 0) {
+                if(daysEl) daysEl.innerText = "00";
+                if(hoursEl) hoursEl.innerText = "00";
+                if(minutesEl) minutesEl.innerText = "00";
+                if(secondsEl) secondsEl.innerText = "00";
+                return;
+            }
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            if(daysEl) daysEl.innerText = days.toString().padStart(2, '0');
+            if(hoursEl) hoursEl.innerText = hours.toString().padStart(2, '0');
+            if(minutesEl) minutesEl.innerText = minutes.toString().padStart(2, '0');
+            if(secondsEl) secondsEl.innerText = seconds.toString().padStart(2, '0');
+        }, 1000);
+    }
+
+    // --- Fechar Modais clicando fora ---
+    window.addEventListener("click", (event) => {
+        if (museumModal && event.target === museumModal) museumModal.classList.remove("active");
+        if (capsuleModal && event.target === capsuleModal) capsuleModal.classList.remove("active");
+    });
+
+}); // <--- FIM DA CAIXA PROTETORA (AGORA NO LUGAR CERTO!)

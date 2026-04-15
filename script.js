@@ -108,27 +108,27 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     spawnBackgroundParticles();
 
-    // --- 6. CÁPSULA DO TEMPO ---
-    const btnOpenCapsule = document.getElementById('btn-open-capsule');
-    const capsuleModal = document.getElementById('capsule-modal');
-    const closeCapsuleBtn = document.getElementById('close-capsule-btn');
-    const lockedView = document.getElementById('capsule-locked');
-    const unlockedView = document.getElementById('capsule-unlocked');
+    // --- 6. Carta DO TEMPO ---
+    const btnOpenCarta = document.getElementById('btn-open-carta');
+    const cartaModal = document.getElementById('carta-modal');
+    const closeCartaBtn = document.getElementById('close-carta-btn');
+    const lockedView = document.getElementById('carta-locked');
+    const unlockedView = document.getElementById('carta-unlocked');
 
-    if (btnOpenCapsule && capsuleModal) {
-        btnOpenCapsule.addEventListener('click', () => {
-            capsuleModal.classList.add('active');
-            checkCapsuleDate();
+    if (btnOpenCarta && cartaModal) {
+        btnOpenCarta.addEventListener('click', () => {
+            cartaModal.classList.add('active');
+            checkcartaDate();
         });
     }
 
-    if (closeCapsuleBtn) {
-        closeCapsuleBtn.addEventListener('click', () => {
-            capsuleModal.classList.remove('active');
+    if (closeCartaBtn) {
+        closeCartaBtn.addEventListener('click', () => {
+            cartaModal.classList.remove('active');
         });
     }
 
-    function checkCapsuleDate() {
+    function checkCartaDate() {
         const today = new Date();
         const currentDay = today.getDate();
 
@@ -594,7 +594,7 @@ mesmo quando tudo tenta passar.`
     // --- Fechar Modais clicando fora ---
     window.addEventListener("click", (event) => {
         if (museumModal && event.target === museumModal) museumModal.classList.remove("active");
-        if (capsuleModal && event.target === capsuleModal) capsuleModal.classList.remove("active");
+        if (cartaModal && event.target === cartaModal) cartaModal.classList.remove("active");
     });
 
 }); // <--- FIM DA CAIXA PROTETORA (AGORA NO LUGAR CERTO!)

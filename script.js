@@ -118,7 +118,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (btnOpenCarta && cartaModal) {
         btnOpenCarta.addEventListener('click', () => {
             cartaModal.classList.add('active');
-            checkcartaDate();
+            checkCartaDate();
         });
     }
 

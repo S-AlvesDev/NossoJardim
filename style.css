@@ -1,0 +1,480 @@
+/* Variáveis de Cores e Fontes */
+:root {
+    --gold: #D4AF37;
+    --amber: #FFB300;
+    --cream: #FFFDF5;
+    --dark: #2C1E14;
+    --glass: rgba(255, 255, 255, 0.7);
+    --font-serif: 'Playfair Display', serif;
+    --font-sans: 'Poppins', sans-serif;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    background-color: var(--cream);
+    color: var(--dark);
+    font-family: var(--font-sans);
+    overflow-x: hidden;
+}
+
+/* Efeito de Textura no Fundo */
+.grain-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: url('https://grainy-gradients.vercel.app/noise.svg');
+    opacity: 0.05;
+    pointer-events: none;
+    z-index: 1000;
+}
+
+#garden-background {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    z-index: -1;
+}
+
+/* Player de Música */
+.music-controller {
+    position: fixed;
+    top: 20px; right: 20px;
+    z-index: 500;
+}
+
+.glass-btn {
+    background: var(--glass);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--gold);
+    width: 50px; height: 50px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    font-size: 1.5rem;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    transition: 0.3s;
+}
+
+.glass-btn:hover { transform: scale(1.1); }
+
+/* Navegação Lateral Responsiva */
+.side-nav {
+    position: fixed;
+    left: 20px; top: 50%;
+    transform: translateY(-50%);
+    display: flex; flex-direction: column; gap: 15px;
+    z-index: 900;
+}
+
+.nav-item {
+    background: var(--glass);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--gold);
+    width: 65px; height: 65px;
+    border-radius: 15px;
+    cursor: pointer;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    transition: 0.3s;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+.nav-item .icon { font-size: 1.5rem; margin-bottom: 2px; }
+.nav-item .label { font-size: 0.65rem; text-transform: uppercase; font-weight: 600; color: var(--gold); }
+.nav-item:hover { transform: scale(1.1); background: white; }
+
+/* Cabeçalho */
+.main-hero {
+    height: 70vh;
+    display: flex; align-items: center; justify-content: center;
+    text-align: center; padding: 0 20px;
+}
+
+.pre-title {
+    text-transform: uppercase; letter-spacing: 4px;
+    font-size: 0.9rem; color: var(--gold);
+    display: block; margin-bottom: 15px;
+}
+
+.main-hero h1 {
+    font-family: var(--font-serif);
+    font-size: clamp(3rem, 8vw, 5rem);
+    font-weight: 700; font-style: italic;
+}
+
+.divider {
+    width: 60px; height: 2px; background: var(--gold);
+    margin: 20px auto;
+}
+
+/* Galeria e Cards */
+.container { max-width: 1100px; margin: 0 auto; padding: 0 20px 80px; }
+
+.gallery-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px;
+}
+
+.premium-card {
+    background: white; padding: 15px; border-radius: 30px;
+    box-shadow: 0 20px 40px rgba(44, 30, 20, 0.05);
+    transition: 0.4s;
+}
+
+.premium-card:hover { transform: translateY(-10px); }
+
+.image-container {
+    width: 100%; height: 400px; border-radius: 20px; overflow: hidden;
+}
+
+.image-container img {
+    width: 100%; height: 100%; object-fit: cover; transition: 0.8s;
+}
+
+.premium-card:hover .image-container img { transform: scale(1.05); }
+
+.card-info { padding: 25px 10px; text-align: center; }
+.card-info p { font-family: var(--font-serif); font-size: 1.2rem; font-style: italic; color: var(--gold); }
+
+/* Animações (Fade In) */
+.fade-in { opacity: 0; transform: translateY(40px); transition: opacity 0.8s ease-out, transform 0.8s ease-out; }
+.fade-in.visible { opacity: 1; transform: translateY(0); }
+
+/* Modais */
+.modal {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(44, 30, 20, 0.85);
+    display: none; align-items: center; justify-content: center;
+    z-index: 2000; backdrop-filter: blur(5px);
+}
+
+.modal.active { display: flex; }
+
+.modal-glass-content, .modal-game-content {
+    background: var(--cream);
+    width: 90%; max-width: 550px;
+    padding: 50px 30px;
+    border-radius: 30px;
+    position: relative;
+    border: 2px solid var(--gold);
+    text-align: center;
+}
+
+.close-modal {
+    position: absolute; top: 15px; right: 20px;
+    font-size: 2rem; border: none; background: none; color: var(--gold);
+    cursor: pointer; transition: 0.3s;
+}
+.close-modal:hover { color: var(--dark); transform: scale(1.2); }
+
+/* Poema */
+.bee-divider { font-size: 2rem; display: block; margin-bottom: 10px; }
+.poem-wrapper h2 { font-family: var(--font-serif); color: var(--gold); margin-bottom: 20px; font-size: 2rem; font-style: italic; }
+.poem-lines p { font-size: 1.1rem; margin-bottom: 5px; }
+.signature { margin-top: 30px; font-family: var(--font-serif); color: var(--gold); font-size: 1.3rem; }
+
+/* Jogo */
+#game-container {
+    width: 100%; height: 65vh; max-height: 500px;
+    background: linear-gradient(to bottom, #e3f2fd, #fff9c4);
+    position: relative; overflow: hidden; border-radius: 20px;
+    border: 2px solid rgba(212, 175, 55, 0.3);
+}
+
+canvas { width: 100%; height: 100%; display: block; cursor: crosshair; }
+
+#game-ui { position: absolute; top: 15px; left: 20px; font-weight: 600; font-size: 1.2rem; color: var(--dark); z-index: 10; }
+
+.game-overlay {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(255, 253, 245, 0.95);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    z-index: 20; padding: 20px;
+}
+
+.hidden { display: none !important; }
+
+.magic-button {
+    background: var(--dark); color: var(--cream); border: none;
+    padding: 15px 40px; font-size: 1.1rem; border-radius: 50px;
+    cursor: pointer; margin-top: 20px; transition: 0.3s; font-family: var(--font-sans);
+}
+.magic-button:hover { background: var(--gold); transform: scale(1.05); }
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .side-nav {
+        left: 0; bottom: 0; top: auto; width: 100%;
+        flex-direction: row; justify-content: center; padding: 15px;
+        transform: none; background: var(--glass); border-top: 1px solid var(--gold);
+    }
+    .nav-item { width: 75px; height: 55px; }
+    .main-hero { height: 50vh; }
+    .main-hero h1 { font-size: 2.8rem; }
+    .container { padding-bottom: 120px; /* Espaço para o nav mobile */ }
+}
+
+/* --- NOVOS ESTILOS PARA O MUSEU E BOTÕES --- */
+
+.buttons-container {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+/* Estilo alternativo para o botão do museu */
+.btn-secondary {
+    background-color: transparent;
+    color: var(--accent-color);
+    border: 2px solid var(--accent-color);
+}
+
+.btn-secondary:hover {
+    background-color: var(--accent-color);
+    color: white;
+}
+
+/* Modal do Museu (maior e com rolagem) */
+.museum-content {
+    max-width: 900px;
+    max-height: 85vh; /* Limita a altura para caber na tela */
+    overflow-y: auto; /* Adiciona barra de rolagem se necessário */
+    padding: 40px 30px;
+}
+
+.museum-subtitle {
+    font-size: 1rem;
+    color: #777;
+    margin-bottom: 30px;
+    font-style: italic;
+}
+
+/* Galeria de Poemas (Grid) */
+.poem-gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    text-align: left;
+}
+
+.museum-card {
+    background: var(--card-bg);
+    padding: 25px;
+    border-radius: 12px;
+    border: 1px solid rgba(212, 175, 55, 0.2); /* Borda dourada suave */
+    box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+    transition: transform 0.3s ease;
+}
+
+.museum-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+}
+
+.museum-card h3 {
+    font-family: var(--font-heading);
+    color: var(--accent-gold);
+    margin-bottom: 15px;
+    font-size: 1.3rem;
+}
+
+/* A propriedade pre-wrap respeita as quebras de linha do JavaScript */
+.museum-card p {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: var(--text-main);
+    white-space: pre-wrap; 
+}
+
+/* --- ESTILOS DA SENHA --- */
+.password-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#password-input {
+    padding: 12px 20px;
+    border: 2px solid rgba(212, 175, 55, 0.5); /* Dourado */
+    border-radius: 30px;
+    outline: none;
+    text-align: center;
+    font-size: 1.5rem;
+    font-family: var(--font-text);
+    background: rgba(255, 255, 255, 0.5);
+    color: var(--text-main);
+    letter-spacing: 5px;
+    transition: border-color 0.3s ease;
+}
+
+#password-input:focus {
+    border-color: var(--accent-gold);
+    background: rgba(255, 255, 255, 0.8);
+}
+
+.error-msg {
+    color: #e74c3c;
+    text-align: center;
+    margin-top: 15px;
+    font-weight: 600;
+    display: none;
+    font-size: 0.9rem;
+}
+
+.shake {
+    animation: shake 0.4s ease-in-out;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-10px); }
+    50% { transform: translateX(10px); }
+    75% { transform: translateX(-10px); }
+}
+
+/* --- ESTILOS DA PÁGINA DE TEMPO (LINHA DO TEMPO) --- */
+.time-page-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    /* Fundo degradê combinando com o jardim (dourado e rosa suave) */
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.9), rgba(230, 184, 184, 0.95));
+    backdrop-filter: blur(15px);
+    z-index: 3000; /* Fica acima de tudo */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow-y: auto;
+    transition: opacity 0.6s ease, visibility 0.6s ease;
+}
+
+.time-page-container.hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.time-content {
+    background: rgba(255, 255, 255, 0.25);
+    padding: 50px 40px;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+    max-width: 700px;
+    width: 90%;
+    color: #fff;
+    text-align: center;
+}
+
+.time-content h2 {
+    font-family: var(--font-heading);
+    font-size: 3.5rem;
+    color: #fff;
+    text-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+    margin-bottom: 5px;
+}
+
+.time-subtitle {
+    font-size: 1.2rem;
+    margin-bottom: 40px;
+    font-style: italic;
+    opacity: 0.9;
+}
+
+/* O Contador de Dias/Horas */
+.counter-grid {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 50px;
+}
+
+.time-box {
+    background: rgba(255, 255, 255, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    padding: 20px;
+    border-radius: 15px;
+    min-width: 110px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+}
+
+.time-value {
+    display: block;
+    font-size: 3rem;
+    font-family: var(--font-heading);
+    font-weight: bold;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+}
+
+.time-label {
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: 600;
+}
+
+/* Linha do Tempo Bonitinha */
+.timeline-decoration {
+    position: relative;
+    padding-left: 40px;
+    text-align: left;
+    margin: 0 auto;
+    max-width: 400px;
+}
+
+.timeline-decoration .line {
+    position: absolute;
+    left: 14px;
+    top: 5px;
+    bottom: 20px;
+    width: 4px;
+    background: rgba(255,255,255,0.6);
+    border-radius: 4px;
+}
+
+.timeline-event {
+    position: relative;
+    margin-bottom: 35px;
+}
+
+.timeline-event p {
+    font-size: 1.3rem;
+    font-weight: bold;
+    margin-bottom: 2px;
+    font-family: var(--font-heading);
+}
+
+.timeline-event small {
+    font-size: 0.95rem;
+    opacity: 0.85;
+}
+
+.event-icon {
+    position: absolute;
+    left: -48px;
+    top: 0;
+    font-size: 1.8rem;
+    background: #fff;
+    border-radius: 50%;
+    padding: 3px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    z-index: 2;
+}
+
+/* Animação da Abelhinha no final da linha do tempo */
+.pulse {
+    animation: pulseBee 1.5s infinite;
+}
+
+@keyframes pulseBee {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2) translateY(-5px); }
+    100% { transform: scale(1); }
+}

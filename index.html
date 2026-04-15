@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nosso Jardim 🌻</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="grain-overlay"></div>
+    <div id="garden-background"></div>
+
+    <nav class="side-nav">
+        <button id="btn-read-poem" class="nav-item" title="Ler Poema Atual">
+            <span class="icon">📜</span>
+            <span class="label">Poema</span>
+        </button>
+        <button id="open-museum-btn" class="nav-item" title="Museu de Poemas">
+            <span class="icon">📖</span>
+            <span class="label">Museu</span>
+        </button>
+        <button id="btn-play-game" class="nav-item" title="Jogar">
+            <span class="icon">🐝</span>
+            <span class="label">Jogo</span>
+        </button>
+        <button id="btn-open-time" class="nav-item" title="Nossa História">
+            <span class="icon">⏳</span>
+            <span class="label">Tempo</span>
+        </button>
+    </nav>
+
+    <div class="music-controller">
+        <button id="music-btn" class="glass-btn">
+            <span id="music-icon">🎵</span>
+        </button>
+    </div>
+    <audio id="bg-music" loop>
+        <source src="TeDevoro.mp3" type="audio/mpeg">
+        Seu navegador não suporta o áudio.
+    </audio>
+
+    <header class="main-hero fade-in">
+        <div class="hero-content">
+            <span class="pre-title">Para meu mel favorito</span>
+            <h1>Te Amo, pipoca 🍿</h1>
+            <div class="divider"></div>
+        </div>
+    </header>
+
+    <main class="container">
+        <section id="gallery-container" class="gallery-grid">
+            </section>
+    </main>
+
+    <div id="poem-modal" class="modal">
+        <div class="modal-glass-content">
+            <button class="close-modal" id="close-poem-btn">&times;</button>
+            <div class="poem-wrapper">
+                <span class="bee-divider">🌻</span>
+                <h2>Luz do meu Dia</h2>
+                <div class="poem-lines">
+                    <p>Como o girassol busca o calor do sol,</p>
+                    <p>Eu busco em ti o meu farol.</p>
+                    <p>És o doce mel, o meu acalento,</p>
+                    <p>O dono de cada pensamento.</p>
+                    <br>
+                    <p>Te devoro com os olhos, com a alma e o ser,</p>
+                    <p>Pois amar você é o meu melhor viver.</p>
+                </div>
+                <div class="signature">Com amor, Madurinho</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="museum-modal" class="modal">
+        <div class="modal-glass-content museum-content" style="max-width: 900px; max-height: 85vh; overflow-y: auto;">
+            <button class="close-modal" id="close-museum-btn">&times;</button>
+            <div class="poem-wrapper">
+                <span class="bee-divider">🌻</span>
+                <h2>Museu de Poemas</h2>
+                <p style="text-align: center; margin-bottom: 30px; font-style: italic; opacity: 0.8;">Uma galeria com todos os versos já escritos para você.</p>
+                <div class="poem-gallery" id="poem-gallery"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="game-modal" class="modal">
+        <div class="modal-game-content">
+            <button class="close-modal" id="close-game-btn">&times;</button>
+            <div id="game-container">
+                <div id="game-ui">
+                    <span id="score-display">Potes: 0</span>
+                </div>
+                <canvas id="beeGame"></canvas>
+                
+                <div id="game-over-screen" class="game-overlay hidden">
+                    <h3>Fim de Jogo! 🍯</h3>
+                    <p>Você coletou <span id="final-score">0</span> potes de mel.</p>
+                    <button id="restart-btn" class="magic-button">Tentar Novamente</button>
+                </div>
+                
+                <div id="start-screen" class="game-overlay">
+                    <h3>Missão da Abelha 🐝</h3>
+                    <p>Mova a abelha para pegar todo o mel!</p>
+                    <p><small>(Use o mouse ou deslize o dedo)</small></p>
+                    <button id="start-game-btn" class="magic-button">Começar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="password-modal" class="modal">
+        <div class="modal-glass-content" style="max-width: 400px;">
+            <button class="close-modal" id="close-password-btn">&times;</button>
+            <div class="poem-wrapper">
+                <span class="bee-divider">🌻</span>
+                <h2>Segredo do Jardim</h2>
+                <p style="text-align: center; margin-bottom: 25px; font-style: italic; opacity: 0.8;">Dica: A data do início 💛 (DDMMAA)</p>
+                
+                <div class="password-container">
+                    <input type="password" id="password-input" placeholder="Digite a senha..." maxlength="6">
+                    <button id="submit-password" class="magic-button" style="margin-top: 15px;">Entrar 🐝</button>
+                </div>
+                <p id="password-error" class="error-msg">Senha incorreta, abelhinha!</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="time-page" class="time-page-container hidden">
+        <button class="close-modal" id="close-time-page" style="position: absolute; top: 20px; right: 30px; font-size: 2.5rem; color: white;">&times;</button>
+        
+        <div class="time-content fade-in visible">
+            <h2>Nossa História 🌻</h2>
+            <p class="time-subtitle">Cada segundo no nosso jardim é um presente.</p>
+
+            <div class="counter-grid">
+                <div class="time-box">
+                    <span id="days" class="time-value">00</span>
+                    <span class="time-label">Dias</span>
+                </div>
+                <div class="time-box">
+                    <span id="hours" class="time-value">00</span>
+                    <span class="time-label">Horas</span>
+                </div>
+                <div class="time-box">
+                    <span id="minutes" class="time-value">00</span>
+                    <span class="time-label">Minutos</span>
+                </div>
+                <div class="time-box">
+                    <span id="seconds" class="time-value">00</span>
+                    <span class="time-label">Segundos</span>
+                </div>
+            </div>
+
+            <div class="timeline-decoration">
+                <div class="line"></div>
+                <div class="timeline-event">
+                    <span class="event-icon">🌱</span>
+                    <p>O Início de Tudo: 07/12/2025</p>
+                    <small>A primeira semente do nosso amor foi plantada.</small>
+                </div>
+                <div class="timeline-event">
+                    <span class="event-icon">🌻</span>
+                    <p>O Desabrochar</p>
+                    <small>Descobrindo que somos o farol um do outro.</small>
+                </div>
+                <div class="timeline-event">
+                    <span class="event-icon pulse">🐝</span>
+                    <p>O Agora e o Sempre</p>
+                    <small>Contando cada segundo até a eternidade.</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -134,7 +134,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // ATENÇÃO: Aqui está o 15 para você testar hoje. 
         // Lembre-se de mudar para 7 quando quiser que funcione só no dia 7!
-        if (currentDay === 15) {
+        if (currentDay === 7) {
             if (lockedView) lockedView.classList.add('hidden');
             if (unlockedView) unlockedView.classList.remove('hidden');
         } else {

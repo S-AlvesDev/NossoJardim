@@ -124,15 +124,25 @@
                         </p>
                     </div>
                 </div>
-                
             </div>
         </div>
     </div>
 
-    <div id="game-modal" class="modal">
+   <div id="game-modal" class="modal">
         <div class="modal-game-content">
             <button class="close-modal" id="close-game-btn">&times;</button>
-            <div id="game-container">
+            
+            <div id="game-selection-screen" class="game-selection-wrapper">
+                <span class="bee-divider" style="font-size: 4rem; margin-bottom: 10px;">🎮</span>
+                <h3 style="font-size: 2rem; margin-bottom: 30px; color: var(--gold); font-family: var(--font-serif); font-style: italic;">Escolha o Desafio</h3>
+                
+                <div class="buttons-container" style="flex-direction: column; align-items: center; gap: 15px;">
+                    <button id="btn-choose-favo" class="magic-button" style="width: 250px; margin: 0;">🍯 Pegar Mel</button>
+                    <button id="btn-choose-flappy" class="magic-button" style="width: 250px; margin: 0;">🐝 Flappy Buzz</button>
+                </div>
+            </div>
+
+            <div id="game-container-favo" class="game-container-style hidden">
                 <div id="game-ui">
                     <span id="score-display">Potes: 0</span>
                 </div>
@@ -142,15 +152,35 @@
                     <h3>Fim de Jogo! 🍯</h3>
                     <p>Você coletou <span id="final-score">0</span> potes de mel.</p>
                     <button id="restart-btn" class="magic-button">Tentar Novamente</button>
+                    <button class="magic-button btn-secondary return-menu-btn" style="margin-top: 10px;">Mudar de Jogo</button>
                 </div>
                 
                 <div id="start-screen" class="game-overlay">
                     <h3>Missão da Abelha 🐝</h3>
                     <p>Mova a abelha para pegar todo o mel!</p>
-                    <p><small>(Use o mouse ou deslize o dedo)</small></p>
                     <button id="start-game-btn" class="magic-button">Começar</button>
+                    <button class="magic-button btn-secondary return-menu-btn" style="margin-top: 10px;">Voltar</button>
                 </div>
             </div>
+
+            <div id="game-container-flappy" class="game-container-style hidden">
+                <canvas id="flappy-canvas"></canvas>
+                
+                <div id="flappy-start-screen" class="game-overlay">
+                    <h3>Flappy Buzz 🚀</h3>
+                    <p>Toque ou clique para voar pelos favos!</p>
+                    <button id="start-flappy-btn" class="magic-button">Voar</button>
+                    <button class="magic-button btn-secondary return-menu-btn" style="margin-top: 10px;">Voltar</button>
+                </div>
+
+                <div id="flappy-game-over" class="game-overlay hidden">
+                    <h3>Bateu! 💥</h3>
+                    <p>Pontuação: <span id="flappy-final-score">0</span></p>
+                    <button id="restart-flappy-btn" class="magic-button">Tentar Novamente</button>
+                    <button class="magic-button btn-secondary return-menu-btn" style="margin-top: 10px;">Mudar de Jogo</button>
+                </div>
+            </div>
+
         </div>
     </div>
 

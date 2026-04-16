@@ -23,21 +23,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const totalFotos = 21;
     
     const frasesRomanticas = [
-        "Você é o mel da minha vida.",
-        "Tão doce quanto o néctar das flores.",
-        "Meu coração sorri por você.",
-        "Cada instante ao seu lado é mágico.",
-        "Meu lugar favorito no mundo é o seu abraço.",
-        "Você é a luz do meu dia.",
-        "O destino mais lindo que eu poderia ter.",
-        "Te amo mais a cada amanhecer.",
-        "Minha paz tem o seu nome.",
-        "Com você, a vida tem mais cor.",
-        "Meu girassol em dias nublados.",
-        "A melhor parte da minha história.",
-        "Um amor que floresce a cada dia.",
-        "Você é o meu sonho que virou realidade.",
-        "Te devoro com os olhos e com a alma."
+        "Você é o mel da minha vida.", "Tão doce quanto o néctar das flores.", "Meu coração sorri por você.",
+        "Cada instante ao seu lado é mágico.", "Meu lugar favorito no mundo é o seu abraço.", "Você é a luz do meu dia.",
+        "O destino mais lindo que eu poderia ter.", "Te amo mais a cada amanhecer.", "Minha paz tem o seu nome.",
+        "Com você, a vida tem mais cor.", "Meu girassol em dias nublados.", "A melhor parte da minha história.",
+        "Um amor que floresce a cada dia.", "Você é o meu sonho que virou realidade.", "Te devoro com os olhos e com a alma."
     ];
 
     if (galleryContainer) {
@@ -70,23 +60,74 @@ document.addEventListener("DOMContentLoaded", () => {
 
     fadeElements.forEach(el => observer.observe(el));
 
-    // --- 4. Controle dos Modais Simples ---
+    // --- 4. CONTROLE DOS MODAIS E SELEÇÃO DE JOGOS ---
     const poemModal = document.getElementById("poem-modal");
     const gameModal = document.getElementById("game-modal");
 
     const btnReadPoem = document.getElementById("btn-read-poem");
     const btnPlayGame = document.getElementById("btn-play-game");
 
-    if (btnReadPoem && poemModal) btnReadPoem.onclick = () => poemModal.classList.add("active");
-    if (btnPlayGame && gameModal) btnPlayGame.onclick = () => gameModal.classList.add("active");
+    // Telas do Menu de Jogos
+    const gameSelectionScreen = document.getElementById("game-selection-screen");
+    const gameContainerFavo = document.getElementById("game-container-favo");
+    const gameContainerFlappy = document.getElementById("game-container-flappy");
 
+    const btnChooseFavo = document.getElementById("btn-choose-favo");
+    const btnChooseFlappy = document.getElementById("btn-choose-flappy");
+
+    if (btnReadPoem && poemModal) btnReadPoem.onclick = () => poemModal.classList.add("active");
+    
+    if (btnPlayGame && gameModal) {
+        btnPlayGame.onclick = () => {
+            gameModal.classList.add("active");
+            // Ao abrir o modal, garante que a tela de seleção seja a primeira a aparecer
+            gameSelectionScreen.classList.remove("hidden");
+            gameContainerFavo.classList.add("hidden");
+            gameContainerFlappy.classList.add("hidden");
+        };
+    }
+
+    // Botões de fechar modais
     document.querySelectorAll(".close-modal").forEach(btn => {
         btn.onclick = () => {
             if (poemModal) poemModal.classList.remove("active");
             if (gameModal) gameModal.classList.remove("active");
+            
+            // Para ambos os motores de jogo ao fechar o modal
             if (typeof stopGame === "function") stopGame();
+            if (typeof stopFlappyGame === "function") stopFlappyGame();
         };
     });
+
+    // Lógica para voltar ao Menu de Seleção de dentro de um jogo
+    document.querySelectorAll(".return-menu-btn").forEach(btn => {
+        btn.onclick = () => {
+            if (typeof stopGame === "function") stopGame();
+            if (typeof stopFlappyGame === "function") stopFlappyGame();
+            
+            gameContainerFavo.classList.add("hidden");
+            gameContainerFlappy.classList.add("hidden");
+            gameSelectionScreen.classList.remove("hidden");
+        }
+    });
+
+    // Selecionou o Jogo de Favo
+    if (btnChooseFavo) {
+        btnChooseFavo.onclick = () => {
+            gameSelectionScreen.classList.add("hidden");
+            gameContainerFlappy.classList.add("hidden");
+            gameContainerFavo.classList.remove("hidden");
+        }
+    }
+
+    // Selecionou o Flappy Buzz
+    if (btnChooseFlappy) {
+        btnChooseFlappy.onclick = () => {
+            gameSelectionScreen.classList.add("hidden");
+            gameContainerFavo.classList.add("hidden");
+            gameContainerFlappy.classList.remove("hidden");
+        }
+    }
 
     // --- 5. Partículas Decorativas de Fundo ---
     function spawnBackgroundParticles() {
@@ -132,9 +173,8 @@ document.addEventListener("DOMContentLoaded", () => {
         const today = new Date();
         const currentDay = today.getDate();
 
-        // ATENÇÃO: Aqui está o 15 para você testar hoje. 
-        // Lembre-se de mudar para 7 quando quiser que funcione só no dia 7!
-        if (currentDay === 7) {
+        // Mude para 7 quando quiser que funcione só no dia 7!
+        if (currentDay === 7 || currentDay === 7) { 
             if (lockedView) lockedView.classList.add('hidden');
             if (unlockedView) unlockedView.classList.remove('hidden');
         } else {
@@ -143,7 +183,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // --- 7. Motor do Jogo de Abelha ---
+    // --- 7. Motor do Jogo ORIGINAL (Favo de Mel) ---
     const canvas = document.getElementById("beeGame");
     if (canvas) {
         const ctx = canvas.getContext("2d");
@@ -159,8 +199,9 @@ document.addEventListener("DOMContentLoaded", () => {
         let bee = { x: 0, y: 0, w: 40, h: 40 };
 
         function initCanvas() {
-            canvas.width = canvas.offsetWidth;
-            canvas.height = canvas.offsetHeight;
+            // Ajusta o tamanho dinamicamente baseado no container
+            canvas.width = canvas.parentElement.offsetWidth;
+            canvas.height = canvas.parentElement.offsetHeight;
             bee.y = canvas.height - 60; 
             bee.x = canvas.width / 2;   
         }
@@ -258,7 +299,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // --- 8. Banco de Dados e Lógica do Museu de Poemas ---
+     // --- 8. Banco de Dados e Lógica do Museu de Poemas ---
     const poemasAntigos = [
         {
             titulo: "Tempestade Boa",
@@ -491,12 +532,8 @@ mesmo quando tudo tenta passar.`
         });
     }
 
-    if (openMuseumBtn && museumModal) {
-        openMuseumBtn.addEventListener("click", () => museumModal.classList.add("active"));
-    }
-    if (closeMuseumBtn && museumModal) {
-        closeMuseumBtn.addEventListener("click", () => museumModal.classList.remove("active"));
-    }
+    if (openMuseumBtn && museumModal) openMuseumBtn.addEventListener("click", () => museumModal.classList.add("active"));
+    if (closeMuseumBtn && museumModal) closeMuseumBtn.addEventListener("click", () => museumModal.classList.remove("active"));
 
     // --- 9. MÓDULO DA NOSSA HISTÓRIA (TEMPO / SENHA) ---
     const btnOpenTime = document.getElementById('btn-open-time');
@@ -519,9 +556,7 @@ mesmo quando tudo tenta passar.`
         });
     }
 
-    if (closePasswordBtn && passwordModal) {
-        closePasswordBtn.addEventListener('click', () => passwordModal.classList.remove('active'));
-    }
+    if (closePasswordBtn && passwordModal) closePasswordBtn.addEventListener('click', () => passwordModal.classList.remove('active'));
 
     function validatePassword() {
         if (!passwordInput) return;
@@ -543,13 +578,8 @@ mesmo quando tudo tenta passar.`
     }
 
     if (submitPasswordBtn) submitPasswordBtn.addEventListener('click', validatePassword);
-
-    if (passwordInput) {
-        passwordInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') validatePassword();
-        });
-    }
-
+    if (passwordInput) passwordInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') validatePassword(); });
+    
     if (closeTimePageBtn && timePage) {
         closeTimePageBtn.addEventListener('click', () => {
             timePage.classList.add('hidden');
@@ -597,4 +627,224 @@ mesmo quando tudo tenta passar.`
         if (cartaModal && event.target === cartaModal) cartaModal.classList.remove("active");
     });
 
-}); // <--- FIM DA CAIXA PROTETORA (AGORA NO LUGAR CERTO!)
+
+    // ==========================================================
+  // ==========================================================
+    // --- 10. NOVO MOTOR: FLAPPY BUZZ (CORREÇÃO DE INÍCIO) ---
+    // ==========================================================
+    const flappyCanvas = document.getElementById('flappy-canvas');
+    if (flappyCanvas) {
+        const fCtx = flappyCanvas.getContext('2d');
+        const fStartScreen = document.getElementById('flappy-start-screen');
+        const fGameOverScreen = document.getElementById('flappy-game-over');
+        const fFinalScore = document.getElementById('flappy-final-score');
+
+        // Assets Visuais
+        const imgAbelha = new Image(); imgAbelha.src = 'abelha.webp';
+        const imgBg = new Image(); imgBg.src = 'backgroud.webp';
+        const imgFavoCima = new Image(); imgFavoCima.src = 'favo_cima.webp';
+        const imgFavoBaixo = new Image(); imgFavoBaixo.src = 'favo_baixo.webp';
+
+        let fGameActive = false;
+        let fWaitingToStart = true;
+        let fScore = 0;
+        let fFrameCount = 0;
+        let fBgScroll = 0;
+        let fPillars = [];
+        let fAnimationId;
+        
+        let fBee = { x: 50, y: 0, width: 80, height: 70, gravity: 0.5, velocity: 0, jumpForce: -8 };
+
+        window.initFlappySize = function() {
+            flappyCanvas.width = flappyCanvas.parentElement.clientWidth || 350;
+            flappyCanvas.height = flappyCanvas.parentElement.clientHeight || 500;
+            fBee.y = flappyCanvas.height / 2;
+        };
+
+        function resetFlappyState() {
+            fScore = 0;
+            fFrameCount = 0;
+            fBgScroll = 0;
+            fPillars = [];
+            fBee.y = flappyCanvas.height / 2;
+            fBee.velocity = 0;
+            fWaitingToStart = true;
+        }
+
+        // Tornando a função global para que os botões possam chamá-la sem erros
+        window.startFlappyGame = function() {
+            window.initFlappySize(); 
+            resetFlappyState();
+            cancelAnimationFrame(fAnimationId); 
+            fGameActive = true;
+            
+            fStartScreen.classList.add("hidden");
+            fGameOverScreen.classList.add("hidden");
+            
+            flappyLoop();
+        };
+
+        window.stopFlappyGame = function() {
+            fGameActive = false;
+            cancelAnimationFrame(fAnimationId);
+            if (fStartScreen) fStartScreen.classList.remove("hidden");
+            if (fGameOverScreen) fGameOverScreen.classList.add("hidden");
+        };
+
+        function flappyGameOver() {
+            fGameActive = false;
+            cancelAnimationFrame(fAnimationId);
+            fFinalScore.innerText = fScore;
+            
+            fCtx.fillStyle = 'rgba(0,0,0,0.5)';
+            fCtx.fillRect(0, 0, flappyCanvas.width, flappyCanvas.height);
+            
+            fGameOverScreen.classList.remove("hidden");
+        }
+
+        function flappyLoop() {
+            if (!fGameActive) return;
+            
+            fCtx.clearRect(0, 0, flappyCanvas.width, flappyCanvas.height);
+
+            // 1. Fundo
+            if (imgBg.complete && imgBg.naturalHeight !== 0) {
+                fBgScroll -= 1;
+                if (fBgScroll <= -flappyCanvas.width) fBgScroll = 0;
+                fCtx.drawImage(imgBg, fBgScroll, 0, flappyCanvas.width, flappyCanvas.height);
+                fCtx.drawImage(imgBg, fBgScroll + flappyCanvas.width, 0, flappyCanvas.width, flappyCanvas.height);
+            } else {
+                fCtx.fillStyle = "#87CEEB"; 
+                fCtx.fillRect(0, 0, flappyCanvas.width, flappyCanvas.height);
+            }
+
+            if (!fWaitingToStart) {
+                // 2. Obstáculos
+                if (fFrameCount % 100 === 0) {
+                    let minGap = 160; 
+                    let maxGapY = flappyCanvas.height - minGap - 100;
+                    let gapY = Math.max(50, Math.random() * maxGapY); 
+                    fPillars.push({ x: flappyCanvas.width, gapY: gapY, scored: false });
+                }
+
+                for (let i = fPillars.length - 1; i >= 0; i--) {
+                    let p = fPillars[i];
+                    p.x -= 3;
+
+                    let pillarWidth = 85; 
+                    let gapSize = 160; 
+                    let bottomY = p.gapY + gapSize;
+                    let bottomHeight = flappyCanvas.height - bottomY;
+
+                    if (imgFavoCima.complete && imgFavoBaixo.complete && imgFavoCima.naturalHeight !== 0) {
+                        fCtx.drawImage(imgFavoCima, p.x, 0, pillarWidth, p.gapY);
+                        fCtx.drawImage(imgFavoBaixo, p.x, bottomY, pillarWidth, bottomHeight);
+                    } else {
+                        fCtx.fillStyle = "#FFA500"; 
+                        fCtx.fillRect(p.x, 0, pillarWidth, p.gapY);
+                        fCtx.fillRect(p.x, bottomY, pillarWidth, bottomHeight);
+                    }
+
+                    if (!p.scored && fBee.x > p.x + pillarWidth) {
+                        fScore++;
+                        p.scored = true;
+                    }
+
+                    if (
+                        fBee.x + fBee.width * 0.7 > p.x && 
+                        fBee.x + fBee.width * 0.3 < p.x + pillarWidth && 
+                        (fBee.y + fBee.height * 0.3 < p.gapY || fBee.y + fBee.height * 0.7 > bottomY)
+                    ) {
+                        flappyGameOver();
+                        return;
+                    }
+
+                    if (p.x + pillarWidth < 0) fPillars.splice(i, 1);
+                }
+                
+                fFrameCount++;
+
+                // 3. Física
+                fBee.velocity += fBee.gravity;
+                fBee.y += fBee.velocity;
+
+                if (fBee.y < 0) { fBee.y = 0; fBee.velocity = 0; }
+                if (fBee.y + fBee.height >= flappyCanvas.height) { flappyGameOver(); return; }
+                
+            } else {
+                // Efeito de Espera
+                fBee.y = (flappyCanvas.height / 2) + Math.sin(Date.now() / 200) * 15;
+                fBee.velocity = 0; 
+                
+                fCtx.fillStyle = `rgba(255, 255, 255, ${0.7 + Math.sin(Date.now() / 300) * 0.3})`;
+                fCtx.font = 'bold 30px Poppins, sans-serif';
+                fCtx.textAlign = 'center';
+                fCtx.shadowColor = "rgba(0,0,0,0.5)";
+                fCtx.shadowBlur = 4;
+                fCtx.fillText("Clique para Voar!", flappyCanvas.width / 2, flappyCanvas.height / 2 + 100);
+                fCtx.shadowBlur = 0; 
+            }
+
+            // 4. Desenho Abelha
+            fCtx.save();
+            fCtx.translate(fBee.x + fBee.width/2, fBee.y + fBee.height/2);
+            fCtx.rotate(fBee.velocity * 0.04);
+            
+            if (imgAbelha.complete && imgAbelha.naturalHeight !== 0) {
+                fCtx.drawImage(imgAbelha, -fBee.width/2, -fBee.height/2, fBee.width, fBee.height);
+            } else {
+                fCtx.fillStyle = "#FFD700"; 
+                fCtx.fillRect(-fBee.width/2, -fBee.height/2, fBee.width, fBee.height);
+            }
+            fCtx.restore();
+
+            // 5. Placar
+            fCtx.fillStyle = 'white';
+            fCtx.strokeStyle = '#2C1E14';
+            fCtx.lineWidth = 4;
+            fCtx.font = 'bold 30px Poppins';
+            fCtx.textAlign = 'center';
+            fCtx.strokeText(fScore, flappyCanvas.width / 2, 50);
+            fCtx.fillText(fScore, flappyCanvas.width / 2, 50);
+
+            fAnimationId = requestAnimationFrame(flappyLoop);
+        }
+
+        // Função de Pulo Corrigida (Ignora botões de UI)
+        const jumpAction = (e) => {
+            const flappyContainer = document.getElementById('game-container-flappy');
+            
+            // Impede de pular se o jogo estiver escondido ou não tiver começado
+            if (!flappyContainer || flappyContainer.classList.contains('hidden') || !fGameActive) return;
+
+            // IGNORA O CLIQUE SE FOR EM UM BOTÃO
+            // Isso previne que o botão "Voar" ou "Mudar Jogo" também dê um pulo falso
+            if (e && e.target && e.target.tagName === 'BUTTON') return;
+
+            // Previne scroll acidental no celular só se clicou na área do jogo
+            if(e && e.target === flappyCanvas) {
+                e.preventDefault(); 
+            }
+
+            if (fWaitingToStart) {
+                fWaitingToStart = false;
+            }
+            fBee.velocity = fBee.jumpForce;
+        };
+
+        // Eventos de Pulo
+        window.addEventListener('mousedown', jumpAction);
+        window.addEventListener('touchstart', jumpAction, { passive: false });
+        window.addEventListener('keydown', (e) => { if (e.code === 'Space') jumpAction(e); });
+
+        // Correção dos Botões de Início
+        // Agora chamamos window.startFlappyGame explicitamente para garantir o escopo
+        const btnStartFlappy = document.getElementById('start-flappy-btn');
+        const btnRestartFlappy = document.getElementById('restart-flappy-btn');
+        
+        if (btnStartFlappy) btnStartFlappy.onclick = window.startFlappyGame;
+        if (btnRestartFlappy) btnRestartFlappy.onclick = window.startFlappyGame;
+
+        window.addEventListener("resize", () => { if(fGameActive) window.initFlappySize(); });
+    }
+});
